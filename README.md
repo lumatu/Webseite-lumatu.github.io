@@ -1,4 +1,4 @@
-Die Webseite ist unter folgender URL zu finden: https://lumatu.github.io
+Die Webseite ist unter folgender URL zu finden: https://lumatu.github.io/Webseite-lumatu.github.io/
 
 Über die Webseite:
 Diese Webseite dient als mein persönliches Portfolio und zeigt eine Auswahl meiner Projekte. Jedes Projekt wird auf einer separaten Seite detailliert beschrieben, inklusive der verwendeten Technologien und meiner Herangehensweise.
