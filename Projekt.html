@@ -1,0 +1,791 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Tic-Tac-Toe mit KI-Gegner</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <style>
+    /* Entferne alle vorhandenen body-Hintergrundstyles */
+    body.is-preload {
+        background-image: none; /* Überschreibt eventuelle vorhandene Hintergründe */
+    }
+
+    /* Setze den gleichen Hintergrund wie in den anderen Projekten */
+    #wrapper {
+        background-image: url("images/bg.jpg");
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+    }
+
+    /* Behalte den restlichen existierenden Style bei */
+    #main .post h1, 
+    #main .post h2, 
+    #main .post h3, 
+    #main .post h4 {
+        text-align: center;
+        border-bottom: none;
+    }
+	 /* Allgemeine Stile */
+        #main .post h1, 
+        #main .post h2, 
+        #main .post h3, 
+        #main .post h4 {
+            text-align: center;
+            border-bottom: none;
+        }
+        
+        .try-out-box {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 2em;
+            background: #f9f9f9;
+        }
+        
+        .try-out-box h4 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .game-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        #status {
+            font-weight: bold;
+            color: #337ab7;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .control-group {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .control-group select, 
+        .control-group button {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            text-align-last: center;
+        }
+        
+        .control-group select option {
+            text-align: center;
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            margin: 0 auto 20px;
+            max-width: 300px;
+        }
+        
+        .cell {
+            width: 80px;
+            height: 80px;
+            background-color: #fff;
+            border: 2px solid #333;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .cell:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .cell.x {
+            color: #e74c3c;
+        }
+        
+        .cell.o {
+            color: #3498db;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .algorithm-explanation {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .feature {
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .feature i {
+            font-size: 2rem;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .bottom-button-container {
+            text-align: center;
+            margin-top: 3em;
+            margin-bottom: 2em;
+        }
+        
+        /* Animationen */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes winPulse {
+            0% { background-color: #fff; }
+            50% { background-color: #d4edda; }
+            100% { background-color: #fff; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .winning-cell {
+            animation: winPulse 1s infinite;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .board {
+                max-width: 250px;
+            }
+            
+            .cell {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+        }
+
+        /* Neuer Style für den Reset-Statistik-Button */
+        .stats-controls {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body class="is-preload">
+    <div id="wrapper">
+        <header id="header">
+            <a href="index.html" class="logo">Zurück</a>
+        </header>
+
+        <div id="main">
+            <section class="post">
+                <header class="major">
+                    <h1>Tic-Tac-Toe mit KI-Gegner</h1>
+                    <p>Spiele gegen einen intelligenten Computergegner, der den Minimax-Algorithmus verwendet</p>
+                </header>
+
+                <div class="try-out-box">
+                    <h4>Tic-Tac-Toe Spielen</h4>
+                    <div class="game-container">
+                        <div class="game-info">
+                            <div id="status">Du bist X - Starte das Spiel!</div>
+                            <button id="toggle-sound">Sound: An</button>
+                        </div>
+                        
+                        <div class="controls">
+                            <div class="control-group">
+                                <label for="difficulty">Schwierigkeit:</label>
+                                <select id="difficulty">
+                                    <option value="easy">Einfach</option>
+                                    <option value="medium" selected>Mittel</option>
+                                    <option value="hard">Schwer</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="board" id="board">
+                            <div class="cell" data-index="0"></div>
+                            <div class="cell" data-index="1"></div>
+                            <div class="cell" data-index="2"></div>
+                            <div class="cell" data-index="3"></div>
+                            <div class="cell" data-index="4"></div>
+                            <div class="cell" data-index="5"></div>
+                            <div class="cell" data-index="6"></div>
+                            <div class="cell" data-index="7"></div>
+                            <div class="cell" data-index="8"></div>
+                        </div>
+                        
+                        <div class="button-container">
+                            <button id="reset" class="button primary">Neues Spiel</button>
+                        </div>
+                        
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-value" id="wins">0</div>
+                                <div class="stat-label">Gewonnen</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="losses">0</div>
+                                <div class="stat-label">Verloren</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="draws">0</div>
+                                <div class="stat-label">Unentschieden</div>
+                            </div>
+                        </div>
+
+                        <!-- Neuer Button zum Zurücksetzen der Statistiken -->
+                        <div class="stats-controls">
+                            <button id="reset-stats" class="button small">Statistiken zurücksetzen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h2>So habe ich das gemacht</h2>
+                <p>Dieses Tic-Tac-Toe-Projekt war eine spannende Herausforderung in algorithmischer Programmierung. Mein Ziel war es, nicht nur ein funktionierendes Spiel zu entwickeln, sondern auch eine künstliche Intelligenz zu implementieren, die auf verschiedenen Schwierigkeitsstufen spielen kann. Die größte Herausforderung war die Implementierung des <strong>Minimax-Algorithmus</strong> für den unschlagbaren Schwierigkeitsgrad.</p>
+                
+                <div class="algorithm-explanation">
+                    <h3>Der Minimax-Algorithmus</h3>
+                    <p>Minimax ist ein Entscheidungsalgorithmus, der häufig in strategischen Spielen verwendet wird. Der Algorithmus simuliert alle möglichen Spielverläufe von einer gegebenen Position aus und bewertet diese, um den optimalen Zug zu finden.</p>
+                    <p>Der Algorithmus funktioniert in folgenden Schritten:</p>
+                    <ol>
+                        <li>Er baut einen Entscheidungsbaum aller möglichen Züge auf</li>
+                        <li>Er bewertet jedes mögliche Spielende (Sieg, Niederlage, Unentschieden)</li>
+                        <li>Er wählt den Zug, der die maximale Auszahlung für den KI-Spieler sicherstellt</li>
+                        <li>Er geht davon aus, dass der menschliche Spieler optimale Züge macht</li>
+                    </ol>
+                    <p>Für Tic-Tac-Toe ist der Minimax-Algorithmus perfekt geeignet, da der Suchbaum relativ klein ist und alle Möglichkeiten durchgespielt werden können.</p>
+                </div>
+
+                <hr />
+
+                <h2>1. Die Spielimplementierung</h2>
+                <p>Das Spiel selbst ist mit einfachem <strong>HTML</strong>, <strong>CSS</strong> und <strong>JavaScript</strong> umgesetzt. Ich habe ein responsives Design gewählt, das auf allen Geräten gut funktioniert. Die Benutzeroberfläche ist intuitiv gestaltet und bietet dem Spieler alle notwendigen Informationen auf einen Blick.</p>
+                <p>Das <strong>JavaScript</strong> hat mehrere Hauptaufgaben:</p>
+                <ul>
+                    <li>Es verwaltet den Spielzustand und die Logik</li>
+                    <li>Es zeichnet das Spielfeld und aktualisiert es bei jedem Zug</li>
+                    <li>Es implementiert die KI für die verschiedenen Schwierigkeitsgrade</li>
+                    <li>Es verwaltet die Statistiken</li>
+                </ul>
+
+                <hr />
+
+                <h2>2. Die KI-Implementierung</h2>
+                <p>Für die KI habe ich drei verschiedene Schwierigkeitsgrade implementiert:</p>
+                
+                <div class="features-list">
+                    <div class="feature">
+                        <h4>Einfach</h4>
+                        <p>Der KI-Gegner macht zufällige Züge, was ihn leicht zu schlagen macht. Diese Stufe ist ideal für Anfänger.</p>
+                    </div>
+                    <div class="feature">
+                        <h4>Mittel</h4>
+                        <p>Der KI-Gegner mischt zufällige Züge mit optimalen Zügen. Diese Stufe bietet eine gute Balance zwischen Herausforderung und Erfolgschancen.</p>
+                    </div>
+                    <div class="feature">
+                        <h4>Schwer</h4>
+                        <p>Der KI-Gegner verwendet den Minimax-Algorithmus und ist praktisch unschlagbar. Das beste Ergebnis, das man erreichen kann, ist ein Unentschieden.</p>
+                    </div>
+                </div>
+
+                <p>Die Implementierung des Minimax-Algorithmus war besonders interessant, da ich verstehen musste, wie man einen Suchbaum für ein Spiel mit begrenzten Möglichkeiten aufbaut und durchläuft.</p>
+
+                <hr />
+
+                <h2>3. Zusätzliche Funktionen</h2>
+                <p>Um das Spielerlebnis zu verbessern, habe ich mehrere Zusatzfunktionen implementiert:</p>
+                
+                <ul>
+                    <li><strong>Statistiken</strong>: Das Spiel zählt Gewinne, Verluste und Unentschieden und speichert diese im localStorage des Browsers.</li>
+                    <li><strong>Lokale Sound-Effekte</strong>: Verschiedene Sounds für Züge, Siege und Niederlagen, die aus dem lokalen assets/sounds/ Ordner geladen werden.</li>
+                    <li><strong>Statistiken zurücksetzen</strong>: Ein Button ermöglicht das Zurücksetzen der gespeicherten Statistiken.</li>
+                    <li><strong>Responsive Design</strong>: Das Spiel passt sich an verschiedene Bildschirmgrößen an.</li>
+                </ul>
+
+                <hr />
+
+                <h2>4. Technische Umsetzung</h2>
+                <p>Für die technische Umsetzung habe ich moderne Webtechnologien verwendet:</p>
+                
+                <ul>
+                    <li><strong>HTML5</strong> für die Struktur des Spiels</li>
+                    <li><strong>CSS3</strong> mit Flexbox und Grid für das Layout und die Animationen</li>
+                    <li><strong>JavaScript (ES6)</strong> für die Spiel-Logik und KI-Implementierung</li>
+                    <li><strong>Local Storage API</strong> zum Speichern von Statistiken und Einstellungen</li>
+                    <li><strong>Web Audio API</strong> für die Sound-Effekte aus lokalen Dateien</li>
+                </ul>
+
+                <p>Die größte Herausforderung war die Optimierung des Minimax-Algorithmus, um auch auf älteren Geräten eine flüssige Performance zu gewährleisten. Durch Begrenzung der Suchtiefe und optimierte Bewertungsfunktionen konnte ich dies erreichen.</p>
+
+                <hr />
+
+                <h2>5. Zusammenspiel von allem</h2>
+                <p>Der fertige Ablauf sieht also so aus:</p>
+                <ul>
+                    <li><strong>Du</strong> wählst einen Schwierigkeitsgrad und beginnst das Spiel.</li>
+                    <li><strong>JavaScript</strong> verwaltet den Spielzustand und zeichnet das Spielfeld.</li>
+                    <li>Bei jedem <strong>Zug</strong> prüft das Script, ob das Spiel beendet ist.</li>
+                    <li>Falls nicht, ist die <strong>KI</strong> an der Reihe und berechnet ihren Zug.</li>
+                    <li>Die <strong>Statistiken</strong> werden aktualisiert und im Browser gespeichert.</li>
+                    <li>Bei Spielende werden <strong>Sound-Effekte</strong> aus dem lokalen Ordner abgespielt.</li>
+                    <li>Mit dem <strong>Reset-Button</strong> können die Statistiken zurückgesetzt werden.</li>
+                </ul>
+                <p>Dieses Projekt war eine ausgezeichnete Übung in algorithmischem Denken und der Umsetzung komplexer Logik in einer Webumgebung.</p>
+
+                <div class="bottom-button-container">
+                    <a href="index.html" class="button small icon solid fa-arrow-left">Zurück zur Startseite</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Spielfeld und Zustandsvariablen
+            const board = document.getElementById('board');
+            const status = document.getElementById('status');
+            const resetButton = document.getElementById('reset');
+            const resetStatsButton = document.getElementById('reset-stats');
+            const difficultySelect = document.getElementById('difficulty');
+            const soundToggle = document.getElementById('toggle-sound');
+            const cells = document.querySelectorAll('.cell');
+            const winsElement = document.getElementById('wins');
+            const lossesElement = document.getElementById('losses');
+            const drawsElement = document.getElementById('draws');
+            
+            // Sound-Effekte aus lokalem assets/sounds/ Ordner
+            const moveSound = new Audio('assets/sounds/move.mp3');
+            const winSound = new Audio('assets/sounds/win.mp3');
+            const loseSound = new Audio('assets/sounds/lose.mp3');
+            const drawSound = new Audio('assets/sounds/draw.mp3');
+            
+            let currentPlayer = 'x'; // Der menschliche Spieler ist X
+            let gameBoard = ['', '', '', '', '', '', '', '', ''];
+            let gameActive = true;
+            let aiThinking = false;
+            let soundEnabled = true;
+            
+            // Statistiken
+            let stats = {
+                wins: 0,
+                losses: 0,
+                draws: 0
+            };
+            
+            // Gewinnkombinationen
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Horizontale
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Vertikale
+                [0, 4, 8], [2, 4, 6]             // Diagonale
+            ];
+            
+            // Initialisierung
+            loadStats();
+            loadSettings();
+            updateStatsDisplay();
+            
+            // Event-Listener für Zellen
+            cells.forEach(cell => {
+                cell.addEventListener('click', handleCellClick);
+            });
+            
+            // Event-Listener für Reset-Button
+            resetButton.addEventListener('click', resetGame);
+            
+            // Event-Listener für Reset-Statistik-Button
+            resetStatsButton.addEventListener('click', resetStats);
+            
+            // Event-Listener für Schwierigkeitsgrad
+            difficultySelect.addEventListener('change', saveSettings);
+            
+            // Event-Listener für Sound-Toggle
+            soundToggle.addEventListener('click', toggleSound);
+            
+            // Zellklick verarbeiten
+            function handleCellClick(e) {
+                const index = parseInt(e.target.dataset.index);
+                
+                // Prüfen, ob Zug gültig ist
+                if (gameBoard[index] !== '' || !gameActive || aiThinking) return;
+                
+                // Zug des menschlichen Spielers
+                makeMove(index, currentPlayer);
+                
+                // Sound abspielen
+                if (soundEnabled) {
+                    moveSound.currentTime = 0;
+                    moveSound.play();
+                }
+                
+                // Prüfen, ob Spiel vorbei ist
+                if (checkWinner()) return;
+                
+                // Wenn Spiel weitergeht, ist der Computer an der Reihe
+                aiThinking = true;
+                status.textContent = 'KI denkt nach...';
+                
+                // KI-Zug mit kurzer Verzögerung
+                setTimeout(() => {
+                    const aiMove = getAIMove();
+                    makeMove(aiMove, 'o');
+                    
+                    // Sound abspielen
+                    if (soundEnabled) {
+                        moveSound.currentTime = 0;
+                        moveSound.play();
+                    }
+                    
+                    // Prüfen, ob Spiel vorbei ist
+                    checkWinner();
+                    aiThinking = false;
+                }, 600);
+            }
+            
+            // Zug auf dem Brett durchführen
+            function makeMove(index, player) {
+                gameBoard[index] = player;
+                const cell = cells[index];
+                cell.textContent = player.toUpperCase();
+                cell.classList.add(player, 'fade-in');
+            }
+            
+            // Gewinner prüfen
+            function checkWinner() {
+                let roundWon = false;
+                let winningCombo = null;
+                
+                for (const pattern of winPatterns) {
+                    const [a, b, c] = pattern;
+                    if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                        roundWon = true;
+                        winningCombo = pattern;
+                        break;
+                    }
+                }
+                
+                if (roundWon) {
+                    // Gewinner anzeigen
+                    gameActive = false;
+                    const winner = gameBoard[winningCombo[0]] === 'x' ? 'Spieler' : 'KI';
+                    status.textContent = `${winner} gewinnt!`;
+                    
+                    // Gewinnende Kombination hervorheben
+                    winningCombo.forEach(index => {
+                        cells[index].classList.add('winning-cell');
+                    });
+                    
+                    // Statistiken aktualisieren
+                    if (winner === 'Spieler') {
+                        stats.wins++;
+                        if (soundEnabled) winSound.play();
+                    } else {
+                        stats.losses++;
+                        if (soundEnabled) loseSound.play();
+                    }
+                    
+                    updateStats();
+                    
+                    return true;
+                }
+                
+                // Unentschieden prüfen
+                if (!gameBoard.includes('')) {
+                    gameActive = false;
+                    status.textContent = 'Unentschieden!';
+                    stats.draws++;
+                    
+                    if (soundEnabled) drawSound.play();
+                    
+                    updateStats();
+                    
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            // KI-Zug basierend auf Schwierigkeitsgrad
+            function getAIMove() {
+                const difficulty = difficultySelect.value;
+                
+                if (difficulty === 'easy') {
+                    // Einfach: Zufälliger Zug
+                    return getRandomMove();
+                } else if (difficulty === 'medium') {
+                    // Mittel: 50% Chance für zufälligen Zug, 50% für optimalen Zug
+                    return Math.random() < 0.5 ? getRandomMove() : getBestMove();
+                } else {
+                    // Schwer: Immer optimaler Zug (unschlagbar)
+                    return getBestMove();
+                }
+            }
+            
+            // Zufälligen Zug generieren
+            function getRandomMove() {
+                const availableMoves = gameBoard
+                    .map((cell, index) => cell === '' ? index : null)
+                    .filter(index => index !== null);
+                
+                return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+            }
+            
+            // Optimalen Zug mit Minimax-Algorithmus finden
+            function getBestMove() {
+                // Implementierung des Minimax-Algorithmus
+                let bestScore = -Infinity;
+                let bestMove = null;
+                
+                for (let i = 0; i < 9; i++) {
+                    if (gameBoard[i] === '') {
+                        gameBoard[i] = 'o';
+                        let score = minimax(gameBoard, 0, false);
+                        gameBoard[i] = '';
+                        
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMove = i;
+                        }
+                    }
+                }
+                
+                return bestMove;
+            }
+            
+            // Minimax-Algorithmus
+            function minimax(board, depth, isMaximizing) {
+                // Ergebnis prüfen
+                const result = evaluateBoard(board);
+                if (result !== null) {
+                    return result;
+                }
+                
+                if (isMaximizing) {
+                    // KI (Maximierer) ist am Zug
+                    let bestScore = -Infinity;
+                    
+                    for (let i = 0; i < 9; i++) {
+                        if (board[i] === '') {
+                            board[i] = 'o';
+                            let score = minimax(board, depth + 1, false);
+                            board[i] = '';
+                            bestScore = Math.max(score, bestScore);
+                        }
+                    }
+                    
+                    return bestScore;
+                } else {
+                    // Menschlicher Spieler (Minimierer) ist am Zug
+                    let bestScore = Infinity;
+                    
+                    for (let i = 0; i < 9; i++) {
+                        if (board[i] === '') {
+                            board[i] = 'x';
+                            let score = minimax(board, depth + 1, true);
+                            board[i] = '';
+                            bestScore = Math.min(score, bestScore);
+                        }
+                    }
+                    
+                    return bestScore;
+                }
+            }
+            
+            // Brett evaluieren
+            function evaluateBoard(board) {
+                // Prüfen auf Gewinner
+                for (const pattern of winPatterns) {
+                    const [a, b, c] = pattern;
+                    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                        return board[a] === 'o' ? 10 : -10;
+                    }
+                }
+                
+                // Prüfen auf Unentschieden
+                if (!board.includes('')) {
+                    return 0;
+                }
+                
+                // Spiel läuft noch
+                return null;
+            }
+            
+            // Spiel zurücksetzen
+            function resetGame() {
+                gameBoard = ['', '', '', '', '', '', '', '', ''];
+                gameActive = true;
+                aiThinking = false;
+                currentPlayer = 'x';
+                
+                // UI zurücksetzen
+                cells.forEach(cell => {
+                    cell.textContent = '';
+                    cell.classList.remove('x', 'o', 'winning-cell', 'fade-in');
+                });
+                
+                status.textContent = 'Du bist X - Starte das Spiel!';
+            }
+            
+            // Statistiken zurücksetzen
+            function resetStats() {
+                if (confirm('Bist du sicher, dass du alle Statistiken zurücksetzen möchtest?')) {
+                    stats = {
+                        wins: 0,
+                        losses: 0,
+                        draws: 0
+                    };
+                    updateStats();
+                    
+                }
+            }
+            
+            // Statistiken aktualisieren
+            function updateStats() {
+                winsElement.textContent = stats.wins;
+                lossesElement.textContent = stats.losses;
+                drawsElement.textContent = stats.draws;
+                
+                // In Local Storage speichern
+                localStorage.setItem('tictactoe_stats', JSON.stringify(stats));
+            }
+            
+            // Statistiken anzeigen
+            function updateStatsDisplay() {
+                winsElement.textContent = stats.wins;
+                lossesElement.textContent = stats.losses;
+                drawsElement.textContent = stats.draws;
+            }
+            
+            // Statistiken laden
+            function loadStats() {
+                const savedStats = localStorage.getItem('tictactoe_stats');
+                if (savedStats) {
+                    stats = JSON.parse(savedStats);
+                }
+            }
+            
+            // Einstellungen laden
+            function loadSettings() {
+                const savedDifficulty = localStorage.getItem('tictactoe_difficulty');
+                if (savedDifficulty) {
+                    difficultySelect.value = savedDifficulty;
+                }
+                
+                const savedSound = localStorage.getItem('tictactoe_sound');
+                if (savedSound !== null) {
+                    soundEnabled = savedSound === 'true';
+                    updateSoundButton();
+                }
+            }
+            
+            // Einstellungen speichern
+            function saveSettings() {
+                localStorage.setItem('tictactoe_difficulty', difficultySelect.value);
+            }
+            
+            // Sound umschalten
+            function toggleSound() {
+                soundEnabled = !soundEnabled;
+                localStorage.setItem('tictactoe_sound', soundEnabled);
+                updateSoundButton();
+            }
+            
+            // Sound-Button aktualisieren
+            function updateSoundButton() {
+                if (soundEnabled) {
+                    soundToggle.textContent = 'Sound: An';
+                } else {
+                    soundToggle.textContent = 'Sound: Aus';
+                }
+            }
+        });
+    </script>
+    <!-- Copyright -->
+					<div id="copyright" style="color: rgb(255, 255, 255);">
+    <ul>
+        <li>&copy; Lut Macid Turpcu</li>
+		<li><a href="https://github.com/DeinBenutzername/dein-portfolio-repo" style="color: rgb(255, 255, 255);"><i class="icon brands fa-github"></i> <span style="margin-left: 0.5em;">Quellcode</a></li>
+        <li>Design Template von: <a href="https://html5up.net" style="color: rgb(255, 255, 255);">HTML5 UP</a></li>
+    </ul>
+
+</div>
+</body>
+</html>

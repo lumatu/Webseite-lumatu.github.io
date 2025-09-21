@@ -1,0 +1,364 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Meine Web-Experimente</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <style>
+        /* Allgemeine Stile für die Experimentier-Boxen */
+        .try-out-box {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 2em;
+            background: #f9f9f9;
+        }
+        .try-out-box h4 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* 1. BILD-EDITOR */
+        #image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            transition: filter 0.2s ease;
+            margin: 0 auto;
+            display: block;
+        }
+        #effects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .slider-label-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Stile für Slider, um sie besser sichtbar zu machen (mit Browser-Kompatibilität) */
+        input[type=range] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            margin-top: 5px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #337ab7;
+            cursor: pointer;
+            border: 1px solid #aaa;
+        }
+        input[type=range]::-moz-range-thumb {
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #337ab7;
+            cursor: pointer;
+            border: 1px solid #aaa;
+        }
+
+        /* 2. ZEICHENZÄHLER */
+        #text-area {
+            resize: vertical; width: 100%; min-height: 100px; border-color: #ccc;
+        }
+        #char-counter-feedback { font-weight: bold; transition: color 0.3s ease; }
+        .counter-ok { color: #28a745; }
+        .counter-warn { color: #fd7e14; }
+        .counter-limit { color: #dc3545; }
+
+        /* 3. GRADIENTEN-MIXER */
+        #gradient-box {
+            height: 150px;
+            border-radius: 8px;
+            margin-top: 15px;
+            transition: background 0.4s ease;
+        }
+        .color-picker-wrapper { display: inline-block; margin: 0 10px; }
+
+        /* 4. ANIMATIONS-SHOWCASE */
+        #animation-box {
+            width: 80px; height: 80px; background: #6495ED;
+            margin: 20px auto 0;
+            border-radius: 8px;
+        }
+        .button-group { margin-top: 15px; }
+        .button-group .button { margin: 5px; }
+        .pulse { animation: pulse 1s infinite; }
+        .flash { animation: flash 0.8s; }
+        .wobble { animation: wobble 1s; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        @keyframes flash {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.2; }
+        }
+        @keyframes wobble {
+            0% { transform: translateX(0%); }
+            15% { transform: translateX(-25%) rotate(-5deg); }
+            30% { transform: translateX(20%) rotate(3deg); }
+            45% { transform: translateX(-15%) rotate(-3deg); }
+            60% { transform: translateX(10%) rotate(2deg); }
+            75% { transform: translateX(-5%) rotate(-1deg); }
+            100% { transform: translateX(0%); }
+        }
+
+        /* Zentrierung der Überschriften im Text-Bereich */
+        #main .post h2, #main .post h4 {
+            text-align: center;
+        }
+
+        /* Style for the button at the bottom of the page */
+        .bottom-button-container {
+            text-align: center;
+            margin-top: 3em;
+            margin-bottom: 2em;
+        }
+    </style>
+</head>
+<body class="is-preload">
+
+    <div id="wrapper">
+
+        <header id="header">
+            <a href="index.html" class="logo">Zurück</a>
+        </header>
+
+        <div id="main">
+            <section class="post">
+                <header class="major">
+                    
+                    <h1>Meine Web-Experimente</h1>
+                    <p>Hier sind ein paar Projekte, die ich erstellt habe, um die Grundlagen von HTML, CSS und JavaScript zu vertiefen. Jedes Experiment zeigt, dass ich neue Konzepte verstehe und in der Lage bin, sie anzuwenden.</p>
+                </header>
+
+                <div class="try-out-box">
+                    <h4>1. Bild-Editor Pro</h4>
+                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                    <button onclick="document.getElementById('image-upload').click();" class="button primary icon solid fa-upload">Bild hochladen</button>
+                    <div style="margin-top: 20px;">
+                        <img id="image-preview" src="images/Dog-Calm.png" alt="Bildvorschau" style="display:block;" />
+                    </div>
+                    <div id="effects-controls">
+                        <div id="effects-grid">
+                            <div class="slider-label-container">
+                                <label>Helligkeit</label><span id="brightness-value">100%</span>
+                            </div>
+                            <input type="range" id="brightness-slider" min="0" max="2" step="0.01" value="1">
+                            <div class="slider-label-container">
+                                <label>Kontrast</label><span id="contrast-value">100%</span>
+                            </div>
+                            <input type="range" id="contrast-slider" min="0" max="2" step="0.01" value="1">
+                            
+                            <div class="slider-label-container">
+                                <label>Sättigung</label><span id="saturation-value">100%</span>
+                            </div>
+                            <input type="range" id="saturation-slider" min="0" max="2" step="0.01" value="1">
+                            
+                            <div class="slider-label-container">
+                                <label>Unschärfe</label><span id="blur-value">0px</span>
+                            </div>
+                            <input type="range" id="blur-slider" min="0" max="10" step="0.1" value="0">
+                        </div>
+                        <button id="reset-filters" class="button small" style="margin-top: 15px;">Filter zurücksetzen</button>
+                    </div>
+                </div>
+
+                <div class="try-out-box">
+                    <h4>2. Einfacher Zeichenzähler</h4>
+                    <textarea id="text-area" placeholder="Was gibt's Neues?" maxlength="140"></textarea>
+                    <p>Zeichen: <span id="char-counter-feedback" class="counter-ok">0 / 140</span></p>
+                </div>
+
+                <div class="try-out-box">
+                    <h4>3. Gradienten-Mixer</h4>
+                    <div class="color-picker-wrapper"><label>Farbe 1</label><input type="color" id="color1" value="#84fab0"></div>
+                    <div class="color-picker-wrapper"><label>Farbe 2</label><input type="color" id="color2" value="#8fd3f4"></div>
+                    <div id="gradient-box"></div>
+                </div>
+
+                <div class="try-out-box">
+                    <h4>4. Animations-Showcase</h4>
+                    <div id="animation-box"></div>
+                    <div class="button-group">
+                        <button class="button" data-animation="pulse">Pulsieren</button>
+                        <button class="button" data-animation="flash">Flackern</button>
+                        <button class="button" data-animation="wobble">Wackeln</button>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h2>So habe ich das gemacht</h2>
+<p>Jedes dieser Projekte ist ein Ergebnis des Lernens aus Online-Tutorials, die ich in eigene, funktionierende Anwendungen umgewandelt habe. Ich habe dabei das Zusammenspiel von HTML, CSS und JavaScript vertieft.</p>
+<hr />
+<h2>1. Der Bild-Editor</h2>
+<p>Dieses Projekt demonstriert die dynamische Bildbearbeitung im Browser. Das Herzstück bildet die <b>CSS filter-Eigenschaft</b>, deren Werte in Echtzeit über <b>JavaScript</b> manipuliert werden. Ich habe <b>Event-Listener</b> auf den input-Elementen der Range-Slider implementiert, um jede Wertänderung sofort in den entsprechenden CSS-Filter-String zu übersetzen. Die gleichzeitige Anzeige der <b>Prozentwerte</b> bietet direktes, numerisches Feedback. Dies ermöglicht eine sofortige visuelle Rückmeldung ohne serverseitige Verarbeitung. Ein separater Button setzt alle Filterwerte programmatisch auf ihre Initialzustände zurück.</p>
+<hr />
+<h2>2. Der Zeichenzähler</h2>
+<p>Dieser einfache Zeichenzähler veranschaulicht die Nutzung von <b>DOM-Events</b> und der Manipulation von Elementklassen. Ein <b>input-Event-Listener</b> überwacht das Textfeld, zählt die Zeichen in Echtzeit und aktualisiert die Anzeige. Basierend auf logischen Abfragen wird die Schriftfarbe dynamisch angepasst: eine einfache <b>if/else if/else-Struktur</b> fügt die entsprechenden CSS-Klassen (<b>counter-warn</b>, <b>counter-limit</b>, etc.) hinzu, um dem Nutzer sofortiges visuelles Feedback zu geben.</p>
+<hr />
+<h2>3. Der Gradienten-Mixer</h2>
+<p>Der Gradienten-Mixer zeigt die Erstellung und dynamische Anpassung von Farbverläufen. Zwei input type="color"-Elemente geben die Farbwerte vor. Ein <b>JavaScript-Skript</b> liest diese Werte aus und generiert den <b>linear-gradient()-CSS-Befehl</b>, um den Hintergrund des Vorschau-Elements zu aktualisieren. Die Integration von <b>transition</b> in CSS sorgt für einen fließenden Übergang zwischen den Farbänderungen und verbessert die User Experience.</p>
+<hr />
+<h2>4. Das Animations-Showcase</h2>
+<p>Dieses Showcase präsentiert die Implementierung von CSS-basierten Animationen. Jede Animation (<b>pulse</b>, <b>flash</b>, <b>wobble</b>) wurde mit <b>@keyframes</b> definiert. Durch das Hinzufügen und sofortige Entfernen der zugehörigen CSS-Klasse mittels JavaScript wird der Browser gezwungen, die Animation neu zu rendern und von vorne zu starten. Dies demonstriert ein effektives Zusammenspiel von <b>JavaScript</b> zur Steuerung von Klassen und <b>CSS</b> zur Definition komplexer Bewegungsabläufe.</p>
+
+                <div class="bottom-button-container">
+                    <a href="index.html" class="button small icon solid fa-arrow-left">Zurück zur Startseite</a>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        // === 1. SCRIPT FÜR BILD-EDITOR ===
+        const uploadInput = document.getElementById('image-upload');
+        const previewImage = document.getElementById('image-preview');
+        const effectsControls = document.getElementById('effects-controls');
+        const brightnessSlider = document.getElementById('brightness-slider');
+        const contrastSlider = document.getElementById('contrast-slider');
+        const saturationSlider = document.getElementById('saturation-slider');
+        const blurSlider = document.getElementById('blur-slider');
+
+        const brightnessValue = document.getElementById('brightness-value');
+        const contrastValue = document.getElementById('contrast-value');
+        const saturationValue = document.getElementById('saturation-value');
+        const blurValue = document.getElementById('blur-value');
+
+        const resetBtn = document.getElementById('reset-filters');
+        
+        function applyFilters() {
+            const brightness = brightnessSlider.value;
+            const contrast = contrastSlider.value;
+            const saturation = saturationSlider.value;
+            const blur = blurSlider.value;
+
+            previewImage.style.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturation}) blur(${blur}px)`;
+            
+            brightnessValue.textContent = `${Math.round(brightness * 100)}%`;
+            contrastValue.textContent = `${Math.round(contrast * 100)}%`;
+            saturationValue.textContent = `${Math.round(saturation * 100)}%`;
+            blurValue.textContent = `${blur}px`; 
+        }
+        
+        function resetFilters() {
+            brightnessSlider.value = 1;
+            contrastSlider.value = 1;
+            saturationSlider.value = 1;
+            blurSlider.value = 0; 
+            applyFilters();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            previewImage.style.display = 'block';
+            effectsControls.style.display = 'block'; 
+            resetFilters(); 
+        });
+
+        uploadInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    effectsControls.style.display = 'block';
+                    resetFilters();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        brightnessSlider.addEventListener('input', applyFilters);
+        contrastSlider.addEventListener('input', applyFilters);
+        saturationSlider.addEventListener('input', applyFilters);
+        blurSlider.addEventListener('input', applyFilters); 
+        resetBtn.addEventListener('click', resetFilters);
+
+        // === 2. SCRIPT FÜR ZEICHENZÄHLER ===
+        const textArea = document.getElementById('text-area');
+        const feedback = document.getElementById('char-counter-feedback');
+        const limit = 140; 
+
+        textArea.addEventListener('input', () => {
+            const count = textArea.value.length;
+            feedback.textContent = `${count} / ${limit}`;
+            feedback.classList.remove('counter-ok', 'counter-warn', 'counter-limit');
+
+            if (count === limit) { 
+                feedback.classList.add('counter-limit');
+            } else if (count > (limit - 20)) {
+                feedback.classList.add('counter-warn');
+            } else {
+                feedback.classList.add('counter-ok');
+            }
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const count = textArea.value.length;
+            feedback.textContent = `${count} / ${limit}`;
+            feedback.classList.add('counter-ok');
+        });
+
+        // 3. SCRIPT FÜR GRADIENTEN-MIXER 
+        const color1 = document.getElementById('color1');
+        const color2 = document.getElementById('color2');
+        const gradientBox = document.getElementById('gradient-box');
+
+        function updateGradient() {
+            gradientBox.style.background = `linear-gradient(45deg, ${color1.value}, ${color2.value})`;
+        }
+        color1.addEventListener('input', updateGradient);
+        color2.addEventListener('input', updateGradient);
+        updateGradient();
+
+        // 4. SCRIPT FÜR ANIMATIONS-SHOWCASE 
+        const animationBox = document.getElementById('animation-box');
+        const animButtons = document.querySelectorAll('.button-group .button');
+
+        animButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const animationClass = button.dataset.animation;
+                animationBox.className = '';
+                void animationBox.offsetWidth;
+                animationBox.classList.add(animationClass);
+            });
+        });
+    </script>
+    <!-- Copyright -->
+					<div id="copyright" style="color: rgb(255, 255, 255);">
+    <ul>
+        <li>&copy; Lut Macid Turpcu</li>
+		<li><a href="https://github.com/DeinBenutzername/dein-portfolio-repo" style="color: rgb(255, 255, 255);"><i class="icon brands fa-github"></i> <span style="margin-left: 0.5em;">Quellcode</a></li>
+        <li>Design Template von: <a href="https://html5up.net" style="color: rgb(255, 255, 255);">HTML5 UP</a></li>
+    </ul>
+    
+</body>
+</html>

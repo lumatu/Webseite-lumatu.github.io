@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Schulprojekte</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		 <style>
+      
+        .post h1,
+        .post h2,
+        .post h3,
+        .post h4 {
+            text-align: center;
+        }
+		.bottom-button-container {
+            text-align: center;
+            margin-top: 3em;
+            margin-bottom: 2em;
+        }
+    </style>
+	</head>
+	<body class="is-preload">
+
+		<div id="wrapper">
+
+				<header id="header">
+						<a href="index.html" class="logo">Zurück</a>
+					</header>
+
+				<div id="main">
+
+						<section class="post">
+								<header class="major">
+									
+									<h1>Schulprojekte<br />
+									</h1>
+									<p>  Hier kannst du ein Spiel ausprobieren, das ich selbst mit Unity entwickelt habe.<br>
+  Die Steuerung erfolgt mit den Tasten <strong>A</strong> und <strong>D</strong> oder den Pfeiltasten <strong>links</strong> und <strong>rechts</strong>.<br>
+  Springen kannst du mit der <strong>Leertaste</strong>.<br>
+  Falls es zu Problemen kommt, lade die Seite bitte neu.
+</p></p>
+								</header>
+								<div id="gameContainer" style="width: 960px; height: 600px; max-width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: #222; cursor: pointer;">
+  <span style="color: #ffffff; font-size: 2em; font-weight: bold; text-shadow: 2px 2px 8px #000, 0 0 10px #ffffff;">
+    Klicke hier, um das Spiel zu starten
+  </span>
+</div>
+
+<script>
+  document.getElementById('gameContainer').onclick = function() {
+    this.innerHTML = '<iframe src="Game/index.html" width="960" height="600" frameborder="0" allowfullscreen></iframe>';
+    this.style.cursor = "default";
+  };
+</script>
+
+	
+
+	<header class="major">
+		
+									</h1>
+									<p></p>
+                  <hr />
+									<p>  Alles in der folgenden Video-Szene wurde von mir selbst mit Blender modelliert und animiert.
+</p></p>
+								</header>
+                    
+                    <div class="image main">
+                        <video src="images/Donut0001-0090.mov" controls width="800" height="800" style="display:block; margin: 0 auto;"></video>
+                    </div>
+<hr />
+                    <h2>Über die Werkzeuge: Blender und Unity</h2>
+                    <p>Für die Umsetzung dieser Projekte habe ich zwei leistungsstarke und kostenlose Programme verwendet: Blender für die 3D-Modellierung und Animation sowie Unity für die Entwicklung des 2D-Spiels.</p>
+
+                    <hr />
+
+                    <h1>Blender</h1>
+
+
+                    <h2>Mein Blender-Projekt: Ein Donut</h2>
+                    
+                
+                    <p>Um zu beginnen, habe ich mich zuerst mit der Benutzeroberfläche vertraut gemacht. Ich startete mit einer Torus-Form, passte die Maße an und fügte Unebenheiten hinzu, um sie realistischer wirken zu lassen. Für die Glasur kopierte ich den oberen Teil des Donuts, machte ihn dicker und verformte die Ränder, um natürlich aussehende Tropfen zu erzeugen. Schließlich richtete ich eine Lichtquelle ein, wählte Farben für den Donut, die Glasur sowie den Hintergrund und positionierte die Kamera für das finale Rendering.</p>
+                    <div class="image main"><img src="images/donut_einfach.png" alt="Einfacher Donut mit pinker Glasur" /></div>
+                    <hr />
+
+                    <h2>Verfeinerung mit Streuseln</h2>
+                    <p>Für die Streusel erstellte ich mehrere kleine, verschieden geformte Objekte. Diese verteilte ich dann zufällig auf der Glasur. Um den Donut noch realistischer zu machen, verbesserte ich die Farben und nutzte spezielle "Nodes" in Blender, um eine frittierte, unebene Textur zu simulieren.</p>
+                    <div class="image main"><img src="images/donut_mit_streuseln.png" alt="Donut mit bunten Streuseln" /></div>
+<hr />
+                    <h2>Erstellung einer Kaffeetasse</h2>
+                    <p>Als Nächstes modellierte ich eine Kaffeetasse aus Glas. Als Referenz diente ein Foto. Ich erstellte eine zylindrische Grundform und passte sie schrittweise an, bis sie der Vorlage entsprach, inklusive des Henkels und eines passenden Tellers. Danach wies ich der Tasse und dem Teller ein Glas-Material zu. Um die Tasse zu füllen, kopierte ich den inneren unteren Teil und gab ihm eine dunkle, kaffeeähnliche Farbe und Textur.</p>
+                    <div class="image main"><img src="images/kaffeetasse.png" alt="Gefüllte Kaffeetasse aus Glas" /></div>
+                    <hr />
+                    <h2>Die letzten Arbeiten und Animation</h2>
+                    <p>Bevor ich mit der Animation begann, erstellte ich aus dem Glasteller einen zweiten Teller aus Porzellan und modellierte einen kleinen Löffel. Für die Animation legte ich eine Start- und Endposition für den Donut fest und ließ Blender die Zwischenbilder berechnen. Zum Schluss animierte ich den Kamerafokus, der von der Tasse auf den Donut wechselt, wodurch der jeweilige Hintergrund unscharf wird.</p>
+                    <div class="image main"><img src="images/szene_final.png" alt="Finale Szene mit Donut und Kaffeetasse" /></div>
+
+                    <hr />
+
+                    <h1>Unity</h1>
+                    
+                    <h2>Erste Schritte und Level-Aufbau</h2>
+                    <p>Nachdem ich Unity kostenlos heruntergeladen hatte, startete ich ein neues 2D-Projekt. Aus dem Unity Asset Store besorgte ich mir ein kostenloses Grafik-Paket namens „Pixel Adventure 1“. Der Levelaufbau erfolgte über eine sogenannte Tilemap, die man sich wie ein Kachelraster vorstellen kann. Ich erstellte separate Ebenen für den Vordergrund (Terrain) und den Hintergrund.</p>
+ <hr />
+                    <h2>Erstellung des „Player“ und der Spielmechanik</h2>
+                    <p>Als Spielerfigur wählte ich den „Ninja Frog“ aus dem Asset-Paket. Ich fügte ihm physikalische Eigenschaften wie Schwerkraft (Rigidbody 2D) und eine Kollisionsbox (Box Collider 2D) hinzu. Die Bewegung des Spielers (Laufen und Springen) musste ich selbst in der Programmiersprache C# scripten. Dazu kamen Animationen für den Leerlauf, das Rennen, Springen und Fallen, die je nach Aktion des Spielers abgespielt werden.</p>
+                    <div class="image main"><img src="images/spieler_erstellung.png" alt="Spielercharakter im leeren Level" /></div>
+<hr />
+                    <h2>Sammelobjekte, Fallen und Sound</h2>
+                    <p>Als Sammelobjekte fügte ich Äpfel hinzu, die verschwinden, wenn der Spieler sie berührt. Ein Zähler am oberen Bildschirmrand zeigt die Anzahl der gesammelten Äpfel an. Als Hindernisse baute ich Stachelfallen und bewegliche Sägen ein, die den Spieler bei Berührung zum Level-Neustart zwingen. Alle Aktionen wie Springen, Sammeln oder Sterben wurden mit passenden Sound-Effekten unterlegt, die ich ebenfalls aus dem Asset Store bezogen habe.</p>
+                    <div class="image main"><img src="images/level_1_design.png" alt="Design von Level 1 mit Fallen und Äpfeln" /></div>
+                    <hr />
+                    <h2>UI und Fertigstellung</h2>
+                    <p>Zum Schluss erstellte ich einen Startbildschirm mit „Start“- und „Beenden“-Knöpfen sowie einen Endbildschirm für den Abschluss des Spiels. Nachdem ich insgesamt drei Level mit ansteigendem Schwierigkeitsgrad gestaltet hatte, exportierte ich das Projekt als ausführbare .exe-Datei, sodass es auf jedem Windows-PC gespielt werden kann.</p>
+                    <div class="image main"><img src="images/Endbildschirm.png" alt="Endbildschirm des Spiels" /></div>
+
+                <div class="bottom-button-container">
+                    <a href="index.html" class="button small icon solid fa-arrow-left">Zurück zur Startseite</a>
+                </div>
+	</div> </div> </div>
+
+		<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+<!-- Copyright -->
+					<div id="copyright" style="color: rgb(255, 255, 255);">
+    <ul>
+        <li>&copy; Lut Macid Turpcu</li>
+		<li><a href="https://github.com/DeinBenutzername/dein-portfolio-repo" style="color: rgb(255, 255, 255);"><i class="icon brands fa-github"></i> <span style="margin-left: 0.5em;">Quellcode</a></li>
+        <li>Design Template von: <a href="https://html5up.net" style="color: rgb(255, 255, 255);">HTML5 UP</a></li>
+    </ul>
+	</body>
+</html>
