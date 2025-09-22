@@ -8,7 +8,98 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		 <style>
-      
+      /* Responsive Game Container */
+.game-container-wrapper {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#gameContainer {
+    width: 100%;
+    height: 0;
+    padding-bottom: 62.5%; /* 600/960 = 0.625 */
+    background: #222;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#gameContainer .start-text {
+    color: #ffffff;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 2px 2px 8px #000, 0 0 10px #ffffff;
+    text-align: center;
+    padding: 0 20px;
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+
+#gameContainer iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Mobile Warning */
+.mobile-warning {
+    display: none;
+    background: #ff6b6b;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+/* Responsive Video */
+.video-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.video-container video {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Mobile Optimization */
+@media screen and (max-width: 768px) {
+    #gameContainer .start-text {
+        font-size: 1.2em;
+    }
+    
+    .mobile-warning {
+        display: block;
+    }
+    
+    .game-container-wrapper {
+        padding: 0 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #gameContainer .start-text {
+        font-size: 1em;
+    }
+}
+
+
         .post h1,
         .post h2,
         .post h3,
@@ -21,6 +112,11 @@
             margin-bottom: 2em;
         }
     </style>
+
+
+    <style>
+    #navPanelToggle { display: none !important; }
+</style>
 	</head>
 	<body class="is-preload">
 
@@ -43,10 +139,14 @@
   Falls es zu Problemen kommt, lade die Seite bitte neu.
 </p></p>
 								</header>
-								<div id="gameContainer" style="width: 960px; height: 600px; max-width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: #222; cursor: pointer;">
-  <span style="color: #ffffff; font-size: 2em; font-weight: bold; text-shadow: 2px 2px 8px #000, 0 0 10px #ffffff;">
-    Klicke hier, um das Spiel zu starten
-  </span>
+								<div class="mobile-warning">
+    ⚠️ Das Spiel ist für Desktop optimiert. Auf Mobilgeräten kann es zu Steuerungsproblemen kommen.
+</div>
+
+<div class="game-container-wrapper">
+    <div id="gameContainer">
+        <span class="start-text">Klicke hier, um das Spiel zu starten</span>
+    </div>
 </div>
 
 <script>
@@ -65,11 +165,14 @@
                   <hr />
 									<p>  Alles in der folgenden Video-Szene wurde von mir selbst mit Blender modelliert und animiert.
 </p></p>
-								</header>
-                    
-                    <div class="image main">
-                        <video src="images/Donut0001-0090.mov" controls width="800" height="800" style="display:block; margin: 0 auto;"></video>
-                    </div>
+								
+</header>
+
+<div class="video-container">
+    <video src="images/Donut0001-0090.mov" controls style="display:block; margin: 0 auto;">
+        Ihr Browser unterstützt das Video-Tag nicht.
+    </video>
+</div>
 <hr />
                     <h2>Über die Werkzeuge: Blender und Unity</h2>
                     <p>Für die Umsetzung dieser Projekte habe ich zwei leistungsstarke und kostenlose Programme verwendet: Blender für die 3D-Modellierung und Animation sowie Unity für die Entwicklung des 2D-Spiels.</p>
@@ -129,6 +232,32 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+      <script>
+    document.getElementById('gameContainer').onclick = function() {
+        // Prüfe ob Mobile Gerät
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            if (confirm('Das Spiel ist für Desktop optimiert. Auf Mobilgeräten kann die Steuerung schwierig sein. Trotzdem öffnen?')) {
+                loadGame();
+            }
+        } else {
+            loadGame();
+        }
+    };
+    
+    function loadGame() {
+        const gameContainer = document.getElementById('gameContainer');
+        gameContainer.innerHTML = '<iframe src="Game/index.html" frameborder="0" allowfullscreen></iframe>';
+        gameContainer.style.cursor = "default";
+        
+        // Entferne die Warnung nach dem Laden
+        const warning = document.querySelector('.mobile-warning');
+        if (warning) {
+            warning.style.display = 'none';
+        }
+    }
+</script>
 <!-- Copyright -->
 					<div id="copyright" style="color: rgb(255, 255, 255);">
     <ul>
@@ -137,5 +266,4 @@
         <li>Design Template von: <a href="https://html5up.net" style="color: rgb(255, 255, 255);">HTML5 UP</a></li>
     </ul>
 	</body>
-
 </html>
